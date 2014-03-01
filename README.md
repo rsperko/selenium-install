@@ -26,3 +26,9 @@ This script performs the following
   * sudo /etc/init.d/selenium-node.sh start
   * sudo update-rc.d selenium-hub.sh defaults
   * sudo update-rc.d selenium-node.sh defaults 25
+
+### Troubleshooting
+The above will run the node on display :10, you can capture a screenshot (after installing imagemagick) with:
+$ import -display :10 -window root ~/image.png
+
+You can also have your PageObject take a screenshot, but it will only be the browser. I found the browser was too small to render desktop mode for OE, that is why I needed the above.
