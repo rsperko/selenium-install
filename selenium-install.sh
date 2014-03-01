@@ -1,5 +1,10 @@
 #!/bin/bash
 
+SELENIUM_HOME=/opt/selenium
+HUB_PORT=4444
+NODE_PORT=4455
+DISPLAY=10
+
 ########################## 
 ########################## 
 # create files
@@ -9,7 +14,7 @@
 cat <<EOF > /tmp/hub.json
 {
   "host": null,
-  "port": 4444,
+  "port": ${HUB_PORT},
   "newSessionWaitTimeout": -1,
   "servlets" : [],
   "prioritizer": null,
@@ -38,11 +43,11 @@ cat <<EOF > /tmp/node.json
   {
     "proxy": "org.openqa.grid.selenium.proxy.DefaultRemoteProxy",
     "maxSession": 5,
-    "port": 4455,
+    "port": ${NODE_PORT},
     "host": "127.0.0.1",
     "register": true,
     "registerCycle": 5000,
-    "hubPort": 4444,
+    "hubPort": ${HUB_PORT},
     "hubHost": "127.0.0.1"
   }
 }
@@ -55,7 +60,7 @@ DESC="Selenium Grid Server"
 RUN_AS="selenium"
 JAVA_BIN="/usr/bin/java"
  
-SELENIUM_DIR="/opt/selenium"
+SELENIUM_DIR="${SELENIUM_HOME}"
 PID_FILE="\$SELENIUM_DIR/selenium-grid.pid"
 JAR_FILE="\$SELENIUM_DIR/selenium-server.jar"
 LOG_DIR="/var/log/selenium"
@@ -129,7 +134,7 @@ DESC="Selenium Grid Server"
 RUN_AS="selenium"
 JAVA_BIN="/usr/bin/java"
  
-SELENIUM_DIR="/opt/selenium"
+SELENIUM_DIR="${SELENIUM_HOME}"
 PID_FILE="\$SELENIUM_DIR/selenium-node.pid"
 JAR_FILE="\$SELENIUM_DIR/selenium-server.jar"
 #LOG_DIR="/var/log/selenium"
@@ -146,7 +151,7 @@ BROWSER="browserName=firefox,version=3.5,firefox_binary=/usr/bin/iceweasel,maxIn
  
 DAEMON_OPTS=" -client \$MAX_MEMORY \$STACK_SIZE -jar \$JAR_FILE -role node -nodeConfig \$SELENIUM_DIR/node.json -log \$LOG_FILE"
  
-DISPLAY_PORT=10
+DISPLAY_PORT=${DISPLAY}
 XVFB="/usr/bin/Xvfb"
 #XVFB_OPTS=" :\${DISPLAY_PORT} -ac -screen 0 1024x768x24"
 XVFB_OPTS=" :\${DISPLAY_PORT} -ac -screen 0 1280x720x16"
@@ -241,15 +246,15 @@ cd /tmp && wget http://selenium-release.storage.googleapis.com/2.40/selenium-ser
 # setup
 ####
 ####
-useradd -M -s /bin/false -U selenium -d /opt/selenium
+useradd -M -s /bin/false -U selenium -d ${SELENIUM_HOME}
 
-mv selenium-server-standalone-2.40.0.jar /opt/selenium/ \
- && sudo ln -s /opt/selenium/selenium-server-standalone-2.40.0.jar /opt/selenium/selenium-server.jar
+mv selenium-server-standalone-2.40.0.jar ${SELENIUM_HOME}/ \
+ && sudo ln -s ${SELENIUM_HOME}/selenium-server-standalone-2.40.0.jar ${SELENIUM_HOME}/selenium-server.jar
 
-mv hub.json /opt/selenium
-mv node.json /opt/selenium
+mv hub.json ${SELENIUM_HOME}
+mv node.json ${SELENIUM_HOME}
 
-chown -R selenium:selenium /opt/selenium
+chown -R selenium:selenium ${SELENIUM_HOME}
 
 mv /tmp/selenium-hub.sh /etc/init.d/ \
  && chmod a+x /etc/init.d/selenium-hub.sh \
