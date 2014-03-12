@@ -257,12 +257,12 @@ mv node.json ${SELENIUM_HOME}
 chown -R selenium:selenium ${SELENIUM_HOME}
 
 mv /tmp/selenium-hub.sh /etc/init.d/ \
- && chmod a+x /etc/init.d/selenium-hub.sh \
+ && chmod 755 /etc/init.d/selenium-hub.sh \
  && /etc/init.d/selenium-hub.sh start \
  && update-rc.d selenium-hub.sh defaults
 
 mv /tmp/selenium-node.sh /etc/init.d/ \
- && chmod a+x /etc/init.d/selenium-node.sh \
+ && chmod 755 /etc/init.d/selenium-node.sh \
  && /etc/init.d/selenium-node.sh start \
  && update-rc.d selenium-node.sh defaults 25
 
